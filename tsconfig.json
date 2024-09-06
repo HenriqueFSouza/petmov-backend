@@ -7,6 +7,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "@types"], // Inclua a pasta @types
+  "include": ["src/**/*", "@types"],  // Certifique-se de incluir a pasta @types
   "exclude": ["node_modules"]
 }

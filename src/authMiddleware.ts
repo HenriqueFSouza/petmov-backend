@@ -15,7 +15,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
     if (err) return res.status(403).json({ message: 'Token inválido' });
 
-    req.user = decodedToken as User; // Agora o TypeScript deve reconhecer req.user
+    req.user = decodedToken as User; 
     next();
   });
 };
