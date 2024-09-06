@@ -1,13 +1,20 @@
 import express from 'express';
-import { registerUser } from './userController';
-import { registerAdmin } from './adminController';
+import { registerUser, registerAdmin, login } from './authController';
+import { authenticateToken } from './authMiddleware';
 
 const app = express();
 
 app.use(express.json());
 
+// Rotas de autenticação
 app.post('/register', registerUser);
-app.post('/register-admin', registerAdmin); // Novo endpoint para cadastrar administrador
+app.post('/register-admin', registerAdmin);
+app.post('/login', login);
+
+// Rota protegida
+app.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'Acesso concedido à rota protegida' });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
