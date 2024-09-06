@@ -1,9 +1,9 @@
-import { User } from '../src/userSchema'; // Verifique se o caminho está correto
+import { User } from '../src/userSchema'; 
 
 declare global {
   namespace Express {
     interface Request {
-      user?: User; // Aqui informamos que 'req.user' existe
+      user?: User; 
     }
   }
 }
