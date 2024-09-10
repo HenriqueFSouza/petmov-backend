@@ -1,2 +1,5 @@
-/node_modules
-/biuld
+node_modules
+build
+env
+env*.local
+package-lock.json

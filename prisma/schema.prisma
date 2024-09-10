@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id String @id @default(uuid())
+
+  name          String
+  email         String  @unique
+  phone         String
+  password_hash String
+  admin         Boolean @default(false)
+
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  agenda     Agenda[]
+  address    Address[]
+  pets       Pets[]
+  services   Services[]
+
+  @@map("users")
+}
+
+model Address {
+  id String @id @default(uuid())
+
+  street     String
+  zip_code   String
+  number     BigInt
+  complement String?
+  city       String
+  state      String
+
+  user_id String
+  user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("address")
+}
+
+model Agenda {
+  id           String @id @default(uuid())
+  weekly_hours Json   @default("{}")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id String
+
+  @@map("agenda")
+}
+
+enum Gender {
+  FEMALE
+  MALE
+}
+
+enum Coat {
+  SHORT
+  MEDIUM
+  LONG
+}
+
+model Pets {
+  id String @id @default(uuid())
+
+  name   String
+  coat   Coat
+  gender Gender
+  weight Int
+
+  owner_id String
+  user     Users  @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  services   Services[]
+
+  @@map("pets")
+}
+
+model Services {
+  id String @id @default(uuid())
+
+  price Float
+
+  user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id String
+
+  pet_id String
+  pet    Pets   @relation(fields: [pet_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("services")
+}
