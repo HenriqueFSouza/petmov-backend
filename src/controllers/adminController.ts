@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { adminSchema, Admin } from './adminSchema';
+import { adminSchema, Admin } from '../schemas/adminSchema';
 
 export const registerAdmin = (req: Request, res: Response) => {
   const result = adminSchema.safeParse(req.body);
