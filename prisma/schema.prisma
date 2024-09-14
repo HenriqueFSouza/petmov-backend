@@ -52,14 +52,16 @@ model Address {
 }
 
 model Agenda {
-  id           String @id @default(uuid())
-  weekly_hours Json   @default("{}")
+  id           Int  @id @default(autoincrement())
+  weekly_hours Json
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  service_duration Float
 
   user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("agenda")
 }
@@ -96,7 +98,10 @@ model Pets {
 model Services {
   id String @id @default(uuid())
 
-  price Float
+  price         Float
+  selected_date DateTime
+  selected_time String
+  end_time      String
 
   user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
