@@ -34,8 +34,12 @@ export const login = async (req: Request, res: Response) => {
       JWT_SECRET,
       { expiresIn: "1h" }
     );
-
-    return res.status(200).json({ token });
+    const userData = { 
+      name: user.name,
+      email: user.email,
+      admin: user.admin
+    }
+    return res.status(200).json({ ...userData, token });
   } catch (error) {
     console.error("Erro ao fazer login:", error);
     return res.status(500).json({ message: "Erro interno do servidor." });

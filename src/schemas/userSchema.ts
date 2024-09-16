@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const userSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Email inválido"),
-  phone: z.string().regex(/^\d{11,12}$/, "Telefone deve ter o formato DDD+Celular"),
+  phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Formato inválido (00) 00000-0000'),
   password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
   admin: z.boolean()
 });

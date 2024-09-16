@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { userAgendaSchema, userSchema } from "../schemas/userSchema";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
+import { createNewAgenda } from "./agendaController";
 
 const prisma = new PrismaClient();
 
@@ -28,17 +29,21 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 
     const password_hash = await bcrypt.hash(user.password, 10);
+
     // Registrar o novo usuário no banco de dados
     const newUser = await prisma.users.create({
       data: {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        password_hash, 
+        password_hash,
         admin: user.admin,
       },
     });
 
+    if (user.admin) {
+      await createNewAgenda(newUser.id);
+    }
     // Retornar sucesso
     return res.status(201).json(newUser);
   } catch (error) {
