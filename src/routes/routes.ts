@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { createPet } from '../controllers/petController';
+import { createPet, getPets } from '../controllers/petController';
 import { authenticateToken } from '../middlewares/authMiddleware';
 import { createNewService, getFreeTimesServices } from '../controllers/serviceController';
 import { getUserProfile, registerUser } from '../controllers/userController';
@@ -26,10 +26,12 @@ routes.get('/profile', authenticateToken, getUserProfile)
 
 
 // Admin User routes
-routes.post('/agenda', authenticateToken, getAgenda)
+routes.get('/agenda', authenticateToken, getAgenda)
 
 // Pet routes
-routes.post('/api/test', authenticateToken, createPet);
+routes.post('/pet', authenticateToken, createPet);
+routes.get('/pet', authenticateToken, getPets);
+
 
 // Services routes
 routes.get('/service/:date', authenticateToken, getFreeTimesServices)
