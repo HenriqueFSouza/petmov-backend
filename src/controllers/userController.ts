@@ -3,8 +3,11 @@ import { userAgendaSchema, userSchema } from "../schemas/userSchema";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { createNewAgenda } from "./agendaController";
+import { userIdSchema } from '../schemas/userSchema';
+
 
 const prisma = new PrismaClient();
+
 
 export const registerUser = async (req: Request, res: Response) => {
   // Validar o corpo da requisição com o Zod
@@ -53,41 +56,39 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 export const getUserProfile = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  // Validação (opcional)
+  const parseResult = userIdSchema.safeParse({ id });
+  if (!parseResult.success) {
+     return res.status(400).json({ error: "ID inválido" });
+  }
+
   try {
-    // Extrair o ID do usuário de req.user
-    const userId = req.user?.id; // Certifique-se de que req.user contém o ID do usuário
+     // Busca o usuário pelo ID sem retornar o password_hash
+     const user = await prisma.users.findUnique({
+        where: { id },
+        select: {
+           id: true,
+           name: true,
+           email: true,
+           phone: true,
+           created_at: true,
+           updated_at: true,
+           // password_hash foi removido propositalmente
+        },
+     });
 
-    if (!userId) {
-      return res.status(400).json({ message: "ID do usuário não fornecido." });
-    }
+     if (!user) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+     }
 
-    // Buscar os dados do usuário no banco de dados
-    const userProfile = await prisma.users.findUnique({
-      where: {
-        id: userId,
-      },
-      // Selecione apenas os campos necessários
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        admin: true,
-        // Não selecione a senha por motivos de segurança
-      },
-    });
-
-    if (!userProfile) {
-      return res.status(404).json({ message: "Usuário não encontrado." });
-    }
-
-    // Retornar os dados do perfil do usuário
-    return res.status(200).json({ user: userProfile });
+     return res.json(user);
   } catch (error) {
-    console.error("Erro ao buscar perfil do usuário:", error);
-    return res.status(500).json({ message: "Erro interno do servidor." });
+     return res.status(500).json({ error: "Erro ao buscar perfil do usuário" });
   }
 };
+
 
 export const createUserAgenda = async (req: Request, res: Response) => {
   const result = userAgendaSchema.safeParse(req.body);
@@ -112,3 +113,4 @@ export const createUserAgenda = async (req: Request, res: Response) => {
     return res.status(500).json();
   }
 };
+
