@@ -16,6 +16,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/nodemailer": "^6.4.16",
     "@types/uuid": "^10.0.0",
     "prisma": "^5.19.1",
     "tsup": "^8.2.4",
@@ -33,6 +34,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "moment-timezone": "^0.5.45"
+    "moment-timezone": "^0.5.45",
+    "nodemailer": "^6.9.15"
   }
 }
