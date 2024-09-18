@@ -52,11 +52,12 @@ model Address {
 }
 
 model Agenda {
-  id           String @id @default(uuid())
-  weekly_hours Json   @default("{}")
+  id               String @id @default(uuid())
+  weekly_hours     Json   @default("{}")
+  service_duration Int
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 
   user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
