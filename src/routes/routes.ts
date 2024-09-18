@@ -5,6 +5,7 @@ import { createNewService, getFreeTimesServices } from '../controllers/serviceCo
 import { getUserProfile, registerUser } from '../controllers/userController';
 import { login } from '../controllers/authController';
 import { getAgenda } from '../controllers/agendaController';
+import { getPrices, savePrices } from '../controllers/pricesController';
 
 const routes = Router();
 
@@ -29,8 +30,12 @@ routes.get('/profile', authenticateToken, getUserProfile)
 routes.get('/agenda', authenticateToken, getAgenda)
 
 // Pet routes
-routes.post('/pet', authenticateToken, createPet);
-routes.get('/pet', authenticateToken, getPets);
+routes.post('/pets', authenticateToken, createPet);
+routes.get('/pets', authenticateToken, getPets);
+
+// Price routes
+routes.post('/prices', authenticateToken, savePrices);
+routes.get('/prices', authenticateToken, getPrices);
 
 
 // Services routes

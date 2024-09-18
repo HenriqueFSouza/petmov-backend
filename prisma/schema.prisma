@@ -28,6 +28,7 @@ model Users {
   address    Address[]
   pets       Pets[]
   services   Services[]
+  prices     Prices[]
 
   @@map("users")
 }
@@ -113,4 +114,20 @@ model Services {
   updated_at DateTime @updatedAt
 
   @@map("services")
+}
+
+model Prices {
+  id String @id @default(uuid())
+
+  price    Float
+  grooming Float
+  range    String
+
+  user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("prices")
 }
