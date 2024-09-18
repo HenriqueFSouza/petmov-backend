@@ -1,17 +1,15 @@
-import { Request, Response, Router } from "express";
-import { createPet, getPets } from "../controllers/petController";
-import { authenticateToken } from "../middlewares/authMiddleware";
-import {
-  createNewService,
-  getFreeTimesServices,
-} from "../controllers/serviceController";
+import nodemailer from "nodemailer";
+import { Request, Response, Router } from 'express';
+import { createPet, getPets } from '../controllers/petController';
+import { authenticateToken } from '../middlewares/authMiddleware';
+import { createNewService, getFreeTimesServices } from '../controllers/serviceController';
+import { getPrices, savePrices } from '../controllers/pricesController';
 import { getUserProfile, registerUser } from "../controllers/userController";
 import { login } from "../controllers/authController";
 import { getAgenda } from "../controllers/agendaController";
 import { emailSchema, resetPasswordSchema } from "../schemas/passwordSchema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
 import { findUserByEmail, findUserById, updateUserPassword } from '../utils/userUtils';
 
 const routes = Router();
@@ -34,8 +32,13 @@ routes.get("/profile", authenticateToken, getUserProfile);
 routes.get("/agenda", authenticateToken, getAgenda);
 
 // Pet routes
-routes.post("/pet", authenticateToken, createPet);
-routes.get("/pet", authenticateToken, getPets);
+routes.post('/pets', authenticateToken, createPet);
+routes.get('/pets', authenticateToken, getPets);
+
+// Price routes
+routes.post('/prices', authenticateToken, savePrices);
+routes.get('/prices', authenticateToken, getPrices);
+
 
 // Services routes
 routes.get("/service/:date", authenticateToken, getFreeTimesServices);
