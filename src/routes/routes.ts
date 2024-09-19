@@ -114,4 +114,8 @@ routes.post("/reset-password", async (req, res) => {
   }
 });
 
+//get profile users
+
+routes.get('/users/:id', getUserProfile);
+
 export default routes;
