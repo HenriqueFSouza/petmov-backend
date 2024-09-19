@@ -28,6 +28,7 @@ model Users {
   address    Address[]
   pets       Pets[]
   services   Services[]
+  prices     Prices[]
 
   @@map("users")
 }
@@ -52,15 +53,16 @@ model Address {
 }
 
 model Agenda {
-  id               String @id @default(uuid())
-  weekly_hours     Json   @default("{}")
-  service_duration Int
+  id           Int  @id @default(autoincrement())
+  weekly_hours Json
 
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  service_duration Float
 
   user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("agenda")
 }
@@ -79,10 +81,12 @@ enum Coat {
 model Pets {
   id String @id @default(uuid())
 
-  name   String
-  coat   Coat
-  gender Gender
-  weight Int
+  name    String
+  coat    Coat
+  gender  Gender
+  weight  Int
+  alergic String?
+  breed   String
 
   owner_id String
   user     Users  @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -97,7 +101,11 @@ model Pets {
 model Services {
   id String @id @default(uuid())
 
-  price Float
+  type          String
+  price         Float
+  selected_date DateTime
+  selected_time String
+  end_time      String
 
   user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id String
@@ -109,4 +117,20 @@ model Services {
   updated_at DateTime @updatedAt
 
   @@map("services")
+}
+
+model Prices {
+  id String @id @default(uuid())
+
+  price    Float
+  grooming Float
+  range    String
+
+  user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("prices")
 }
