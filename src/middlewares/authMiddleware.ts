@@ -25,5 +25,4 @@ export const authenticateToken = (
     next();
   });
 
-  res.status(200)
 };

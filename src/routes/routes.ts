@@ -6,11 +6,12 @@ import { createNewService, getFreeTimesServices, listServicesByUser } from '../c
 import { getPrices, savePrices } from '../controllers/pricesController';
 import { getUserProfile, registerUser } from "../controllers/userController";
 import { login } from "../controllers/authController";
-import { getAgenda } from "../controllers/agendaController";
+import { getAgenda, updateAgenda } from "../controllers/agendaController";
 import { emailSchema, resetPasswordSchema } from "../schemas/passwordSchema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { findUserByEmail, findUserById, updateUserPassword } from '../utils/userUtils';
+import { getAdminDashboard } from "../controllers/dashController";
 
 const routes = Router();
 
@@ -28,8 +29,12 @@ routes.get("/auth", authenticateToken, (req: Request, res: Response) => {
 // Profile route
 routes.get("/profile", authenticateToken, getUserProfile);
 
+// Profile route
+routes.get("/dashboard", authenticateToken, getAdminDashboard);
+
 // Admin User routes
 routes.get("/agenda", authenticateToken, getAgenda);
+routes.put("/agenda", authenticateToken, updateAgenda);
 
 // Pet routes
 routes.post('/pets', authenticateToken, createPet);
