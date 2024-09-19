@@ -11,7 +11,13 @@ export const getAgenda = async (_: Request, res: Response) => {
         id: 1,
       },
     });
-    return res.status(201).json(agenda);
+
+    const prices = await prisma.prices.findMany({
+      where: {
+        user_id: agenda?.user_id,
+      },
+    });
+    return res.status(201).json({agenda, prices});
   } catch (err) {
     return res.status(500).json();
   }

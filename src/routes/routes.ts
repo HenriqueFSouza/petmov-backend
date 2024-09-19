@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
 import { Request, Response, Router } from 'express';
-import { createPet, getPets } from '../controllers/petController';
+import { createPet, deletePet, getPetById, getPets, updatePet } from '../controllers/petController';
 import { authenticateToken } from '../middlewares/authMiddleware';
-import { createNewService, getFreeTimesServices } from '../controllers/serviceController';
+import { createNewService, getFreeTimesServices, listServicesByUser } from '../controllers/serviceController';
 import { getPrices, savePrices } from '../controllers/pricesController';
 import { getUserProfile, registerUser } from "../controllers/userController";
 import { login } from "../controllers/authController";
@@ -22,7 +22,7 @@ routes.post("/users", registerUser);
 
 // Auth check route
 routes.get("/auth", authenticateToken, (req: Request, res: Response) => {
-  return res.status(200);
+  return res.status(200).json({ message: "Usuário autenticado" });
 });
 
 // Profile route
@@ -34,6 +34,9 @@ routes.get("/agenda", authenticateToken, getAgenda);
 // Pet routes
 routes.post('/pets', authenticateToken, createPet);
 routes.get('/pets', authenticateToken, getPets);
+routes.get('/pets/:id', authenticateToken, getPetById);
+routes.put('/pets/:id', authenticateToken, updatePet);
+routes.delete('/pets/:id', authenticateToken, deletePet);
 
 // Price routes
 routes.post('/prices', authenticateToken, savePrices);
@@ -41,6 +44,7 @@ routes.get('/prices', authenticateToken, getPrices);
 
 
 // Services routes
+routes.get("/service", authenticateToken, listServicesByUser);
 routes.get("/service/:date", authenticateToken, getFreeTimesServices);
 routes.post("/service", authenticateToken, createNewService);
 

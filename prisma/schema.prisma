@@ -81,10 +81,12 @@ enum Coat {
 model Pets {
   id String @id @default(uuid())
 
-  name   String
-  coat   Coat
-  gender Gender
-  weight Int
+  name    String
+  coat    Coat
+  gender  Gender
+  weight  Int
+  alergic String?
+  breed   String
 
   owner_id String
   user     Users  @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -99,6 +101,7 @@ model Pets {
 model Services {
   id String @id @default(uuid())
 
+  type          String
   price         Float
   selected_date DateTime
   selected_time String

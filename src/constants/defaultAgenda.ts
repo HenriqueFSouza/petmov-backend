@@ -46,6 +46,6 @@ const DEFAULT_WEEKLY_HOURS = [
   ]
 
 export const defaultAgenda = { 
-    service_duration: 60,
+    service_duration: 1,
     weekly_hours: DEFAULT_WEEKLY_HOURS
 }

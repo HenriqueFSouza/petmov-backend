@@ -13,14 +13,12 @@ export const createNewService = async (req: Request, res: Response) => {
     price: z.number(),
     pet_id: z.string(),
     selected_date: z.coerce.date(),
-    selected_time: z.object({
-      available: z.boolean(),
-      hour: z.string(),
-    }),
-    duration: z.number()
+    selected_time: z.string(),
+    duration: z.number(),
+    type: z.string()
   });
 
-  const { price, pet_id, selected_date, selected_time, duration } = bodySchema.parse(req.body)
+  const { price, pet_id, selected_date, selected_time, duration, type } = bodySchema.parse(req.body)
 
   const user_id = req.user.id
   
@@ -31,8 +29,9 @@ export const createNewService = async (req: Request, res: Response) => {
             pet_id,
             user_id,
             selected_date,
-            selected_time: selected_time.hour,
-            end_time: sumHour(selected_time.hour, duration)
+            type,
+            selected_time: selected_time,
+            end_time: sumHour(selected_time, duration)
         }
     })
 
@@ -96,7 +95,7 @@ export const getFreeTimesServices = async (req: Request, res: Response) => {
 
           const startTotalMinutes = parsedStartHour * 60 + parsedStartMinute;
           const endTotalMinutes = parsedEndHour * 60 + parsedEndMinute;
-
+          
           const servicesTimes = servicesForTheDate.map((service) => {
             const [endHour, endMinute] = service.end_time
               .split(":")
@@ -118,8 +117,9 @@ export const getFreeTimesServices = async (req: Request, res: Response) => {
               end: serviceEnd,
               start: serviceStart,
             };
-          }) as Array<{ end: Date; start: Date; owner_id: string }>;
+          }) as Array<{ end: Date; start: Date}>;
 
+          
           const slots = [];
           for (
             let minutes = startTotalMinutes;
@@ -127,14 +127,14 @@ export const getFreeTimesServices = async (req: Request, res: Response) => {
             minutes += serviceDuration
           ) {
             const start = moment
-              .tz(date, "America/Sao_Paulo")
+              .tz(parsedDate, "America/Sao_Paulo")
               .startOf("day")
               .add(minutes, "minutes")
               .toDate();
             const end = moment(start).add(serviceDuration, "minutes").toDate();
 
             const isAfterNow = start.getTime() > today.getTime();
-            const isToday = isSameDay(new Date(date), today);
+            const isToday = isSameDay(new Date(parsedDate), today);
 
             const hour = `${start
               .getHours()
@@ -187,6 +187,32 @@ export const getFreeTimesServices = async (req: Request, res: Response) => {
 
     return res.status(200).json(uniqueAvailableTimes);
   } catch (err) {
+    console.log('Error ao buscar horários:', err)
     return res.status(500).json();
+  }
+};
+
+export const listServicesByUser = async (req: Request, res: Response) => {
+  // Valida que o id do usuário está presente no request
+  const user_id = req.user.id;
+
+  try {
+    // Busca todos os serviços do usuário e seus pets relacionados
+    const services = await prisma.services.findMany({
+      where: {
+        user_id: user_id,
+      },
+      include: {
+        pet: true, // Relaciona o pet com cada serviço
+      },
+      orderBy: {
+        selected_date: 'desc', // Ordena os serviços pela data selecionada de forma decrescente
+      },
+    });
+
+    return res.status(200).json(services);
+  } catch (err) {
+    console.error("Erro ao buscar serviços:", err);
+    return res.status(500).json({ message: "Erro ao buscar serviços." });
   }
 };
