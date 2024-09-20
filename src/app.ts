@@ -6,7 +6,7 @@ import routes from "./routes/routes";
 export const app = express();
 
 const corsOptions = {
-  origin: "https://petmov-frontend.onrender.com", // Certifique-se de usar o domínio correto do front-end
+  origin: "https://petmov-frontend.vercel.app", // Certifique-se de usar o domínio correto do front-end
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Inclua os métodos permitidos
   allowedHeaders: ["Content-Type", "Authorization"], // Inclua os cabeçalhos permitidos
   credentials: true, // Se você precisa enviar cookies, use isso
